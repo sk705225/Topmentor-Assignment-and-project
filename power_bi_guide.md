@@ -1,4 +1,4 @@
-# Power BI Guide For Financial Analytics
+# Power BI Guide For Retail Analytics
 
 Use this guide to recreate the same visuals in Power BI.
 
@@ -7,95 +7,95 @@ Use this guide to recreate the same visuals in Power BI.
 1. Open Power BI Desktop.
 2. Click `Get Data`.
 3. Select `Text/CSV`.
-4. Choose `data/financial_data.csv`.
+4. Choose `data/retail_sales.csv`.
 5. Click `Load`.
 
 ## Data Cleaning In Power Query
 
 1. Open `Transform Data`.
-2. Check that `Date` is a Date column.
-3. Check that `Revenue` and `Expenses` are numeric columns.
-4. Remove duplicate rows.
-5. Remove rows where important fields like `Transaction ID`, `Department`, or `Region` are blank.
-6. Add a calculated column if needed:
-
-```DAX
-Profit = financial_data[Revenue] - financial_data[Expenses]
-```
-
-7. Click `Close & Apply`.
+2. Check that `Order Date` is a Date column.
+3. Check that `Quantity`, `Sales`, and `Profit` are numeric columns.
+4. Remove duplicate rows from the table.
+5. Remove rows where important fields like `Order ID`, `Customer ID`, or `Product Name` are blank.
+6. Click `Close & Apply`.
 
 ## DAX Measures
 
 Create these measures in Power BI:
 
 ```DAX
-Total Revenue = SUM(financial_data[Revenue])
+Total Sales = SUM(retail_sales[Sales])
 ```
 
 ```DAX
-Total Expenses = SUM(financial_data[Expenses])
+Total Profit = SUM(retail_sales[Profit])
 ```
 
 ```DAX
-Total Profit = [Total Revenue] - [Total Expenses]
+Total Orders = DISTINCTCOUNT(retail_sales[Order ID])
 ```
 
 ```DAX
-Profit Margin = DIVIDE([Total Profit], [Total Revenue])
+Average Sales = AVERAGE(retail_sales[Sales])
 ```
 
-Optional:
+You can also create:
 
 ```DAX
-Average Revenue = AVERAGE(financial_data[Revenue])
+Total Customers = DISTINCTCOUNT(retail_sales[Customer ID])
 ```
 
 ## Recreate The Visuals
 
-### 1. Bar Chart: Revenue By Department
+### 1. Bar Chart: Sales By Category
 
 - Visual: Clustered bar chart
-- Axis: `Department`
-- Values: `Total Revenue`
-- Sort: Total Revenue descending
+- Axis: `Category`
+- Values: `Total Sales`
+- Sort: Total Sales descending
 
-### 2. Line Chart: Monthly Profit Trend
+### 2. Line Chart: Monthly Sales Trend
 
 - Visual: Line chart
-- X-axis: `Date`
-- Y-axis: `Total Profit`
+- X-axis: `Order Date`
+- Y-axis: `Total Sales`
 - Date level: Month
 
-### 3. Pie Chart: Expenses By Region
+### 3. Pie Chart: Sales By Region
 
 - Visual: Pie chart
 - Legend: `Region`
-- Values: `Total Expenses`
+- Values: `Total Sales`
 
-### 4. Histogram: Revenue Distribution
+### 4. Histogram: Sales Distribution
 
-Power BI does not always include a default histogram visual, so use a grouped column chart:
+Power BI does not have a default histogram in all versions, so use one of these options:
 
-1. Right-click the `Revenue` column.
+- Use a column chart with grouped sales bins.
+- Or install a histogram visual from AppSource.
+
+Simple bin method:
+
+1. Right-click the `Sales` column.
 2. Select `New group`.
-3. Choose bin size, such as `20000`.
-4. Add a column chart.
-5. Axis: `Revenue (bins)`.
-6. Values: Count of `Transaction ID`.
+3. Choose bin size, such as `10000`.
+4. Create a column chart.
+5. Axis: `Sales (bins)`.
+6. Values: Count of `Order ID`.
 
 ## Suggested Dashboard Cards
 
 Create card visuals for:
 
-- Total Revenue
-- Total Expenses
+- Total Sales
 - Total Profit
-- Profit Margin
+- Total Orders
+- Average Sales
+- Total Customers
 
 ## Suggested Dashboard Layout
 
 - Top row: KPI cards
-- Middle row: Revenue by Department and Expenses by Region
-- Bottom row: Monthly Profit Trend and Revenue Distribution
+- Middle row: Sales by Category and Sales by Region
+- Bottom row: Monthly Sales Trend and Sales Distribution
 
